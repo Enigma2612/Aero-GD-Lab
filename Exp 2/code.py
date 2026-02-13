@@ -32,12 +32,10 @@ area_ratios = [h/h_throat for h in heights]
 area_ratio = lambda m: 1/m * (2/2.4 * (1 + 0.2*m**2))**3
 def find_mach(ar, thresh, regime='sub'):
     if regime == 'sub':
-        l = 0.01
-        r = 1
+        l,r = 0.01, 1
         ans = l
     else:
-        r = 1
-        l = 1000
+        r,l = 1,1000
         while area_ratio(l) < ar: l *= 10
         
     while abs(r-l) >= thresh:
