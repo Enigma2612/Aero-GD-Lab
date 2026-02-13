@@ -53,7 +53,7 @@ regimes = ['sub']*6 + ['sup']*19
 mach = lambda p: (((P0/p)**(2/7) - 1)*5)**0.5
 mach_nos = [mach(P0+p) for p in pressures]
 
-calc_mach_nos = [find_mach(area_ratios[i], 10e-10, regime=regimes[i]) for i in range(len(area_ratios))]
+calc_mach_nos = [find_mach(area_ratios[i], 1e-15, regime=regimes[i]) for i in range(len(area_ratios))]
 
 print(mach_nos)
 
