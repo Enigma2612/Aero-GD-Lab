@@ -57,7 +57,7 @@ p_ratio = lambda p : (p + P0) / P0
 
 p_ratios = [[p_ratio(p) for p in line] for line in pressures]
 
-shock_location = [(positions[1] + positions[0])//2] * len(back_pressures)
+shock_location = [(positions[1] + positions[0])/2] * (len(back_pressures) -1) + [(positions[2] + positions[1])/2]
 back_pressure_ratios = [p_ratio(p) for p in back_pressures]
 
 
@@ -87,9 +87,9 @@ back_pressure_ratios = [p_ratio(p) for p in back_pressures]
 #     print(s)
 
 
-for i in range(len(dias)):
-    s = fr"{i+1} & {positions[i]} & {area_ratios[i]:.3f} & {ideal_pratios_up[i][1]:.3f} & {ideal_pratios_down[i][1]:.3f} \\"
-    print(s)
+# for i in range(len(dias)):
+#     s = fr"{i+1} & {positions[i]} & {area_ratios[i]:.3f} & {ideal_pratios_up[i][1]:.3f} & {ideal_pratios_down[i][1]:.3f} \\"
+#     print(s)
 
 
 #GRAPH 1
@@ -125,10 +125,13 @@ for i in range(len(dias)):
 # #GRAPH 2
 
 
-# plt.plot(back_pressure_ratios, shock_location, color='blue')
-# plt.scatter(back_pressure_ratios, shock_location, color = 'blue')
-# plt.xlabel("Back Pressure Ratio (Pb/P0)")
-# plt.ylabel("Average Shock Location (mm)")
-# plt.title("Shock Location vs Back Pressure Ratio")
-# plt.savefig(fname='graph2', dpi=300, bbox_inches='tight')
-# plt.show()
+plt.plot(back_pressure_ratios[1:], shock_location[1:], color='blue')
+plt.scatter(back_pressure_ratios[1:], shock_location[1:], color = 'blue')
+plt.xlabel("Back Pressure Ratio (Pb/P0)")
+plt.ylabel("Average Shock Location (mm)")
+plt.title("Shock Location vs Back Pressure Ratio")
+plt.savefig(fname='graph2', dpi=300, bbox_inches='tight')
+plt.show()
+
+print(shock_location)
+print((positions[2] - positions[1])/2)
