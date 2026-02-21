@@ -5,13 +5,14 @@ import matplotlib.pyplot as plt
 with open('data.csv', newline='\n') as f:
     r = csv.reader(f)
     pressures = []
+    back_pressures = []
     for line in r:
         pres = []
         for i,p in enumerate(line):
             pres.append(int(p))
-        pressures.append(pres)
+        pressures.append(pres[1:])
+        back_pressures.append(pres[0])
     
-    pressures = pressures[:-1]
 
 P0 = 1013.25 #mbar
 
@@ -42,11 +43,9 @@ def find_mach(ar, thresh, regime='sub'):
             ans = r
     return ans
 
-machs_down = [(find_mach(area_ratios[0], 1e-10, 'sub'), positions[0])] \
-+ [(find_mach(area_ratios[i], 1e-10, 'sup'), positions[i]) for i in range(len(area_ratios))] \
+machs_down = [(find_mach(area_ratios[i], 1e-10, 'sup'), positions[i]) for i in range(len(area_ratios))] \
 
-machs_up = [(find_mach(area_ratios[0], 1e-10, 'sub'), positions[0])] \
-+ [(find_mach(area_ratios[i], 1e-10, 'sub'), positions[i]) for i in range(len(area_ratios))] 
+machs_up = [(find_mach(area_ratios[i], 1e-10, 'sub'), positions[i]) for i in range(len(area_ratios))] 
 
 
 p_ratio_from_mach = lambda m: (1 + 0.2*m**2)**(-3.5)
@@ -58,29 +57,78 @@ p_ratio = lambda p : (p + P0) / P0
 
 p_ratios = [[p_ratio(p) for p in line] for line in pressures]
 
-markers = ['s', 'o', '^']
-colors = ['#1f77b4',  # blue
-          '#d62728',  # red
-          '#2ca02c',  # green
-          '#ff7f0e',  # orange
-          '#9467bd',  # purple
-          '#17becf']  # cyan
+shock_location = [(positions[1] + positions[0])//2] * len(back_pressures)
+back_pressure_ratios = [p_ratio(p) for p in back_pressures]
 
-plt.figure(figsize=(9,6))
-plt.grid()
-for i, p in enumerate(p_ratios):
-    plt.scatter(positions, p, label=f'Data Set {i+1}', marker=markers[i%3], facecolors='none', edgecolors=colors[i], s=50, linewidths=1.5)
-    plt.plot(positions, p, color=colors[i])
 
-control_colors = ['#000000',  # black
-                  "#eb18ac"]  # magenta/pink
-plt.scatter(*zip(*ideal_pratios_up), color=control_colors[0])
-plt.plot(*zip(*ideal_pratios_up), color=control_colors[0], label='Ideal Subsonic Recovery')
-plt.scatter(*zip(*ideal_pratios_down), color=control_colors[1])
-plt.plot(*zip(*ideal_pratios_down), color=control_colors[1], label='Ideal Supersonic Flow')
-plt.legend()
-plt.xlabel('Tapping Positions (mm)')
-plt.ylabel('Pressure Ratios (P/P0)')
-plt.title("Graph of Pressure Ratio vs Tapping Position")
-plt.savefig(fname='graph', bbox_inches='tight', dpi=300)
-plt.show()
+#TABLE 1
+
+# for i in range(len(pressures)):
+#     s = fr"{i+1} & {positions[i]} & {back_pressures[i]}"
+#     for x in range(len(pressures[0])):
+#         s += fr" & {pressures[i][x]}"
+#     s += fr' \\'
+#     print(s)
+
+#TABLE 2
+# for i in range(len(dias)):
+#     s = fr"{i+1} & {positions[i]} & {dias[i]} \\"
+#     print(s)
+
+
+#TABLE 3
+
+
+# for i in range(len(pressures)):
+#     s = fr" {i+1} & {back_pressure_ratios[i]:.3f}"
+#     for x in range(len(pressures[0])):
+#         s += fr" & {p_ratios[i][x]:.3f}"
+#     s += fr" \\ "
+#     print(s)
+
+
+for i in range(len(dias)):
+    s = fr"{i+1} & {positions[i]} & {area_ratios[i]:.3f} & {ideal_pratios_up[i][1]:.3f} & {ideal_pratios_down[i][1]:.3f} \\"
+    print(s)
+
+
+#GRAPH 1
+
+# markers = ['s', 'o', '^']
+# colors = ['#1f77b4',  # blue
+#           '#d62728',  # red
+#           '#2ca02c',  # green
+#           '#ff7f0e',  # orange
+#           '#9467bd',  # purple
+#           '#17becf']  # cyan
+
+# plt.figure(figsize=(9,6))
+# plt.grid()
+# for i, p in enumerate(p_ratios):
+#     plt.scatter(positions, p, label=f'Data Set {i+1}', marker=markers[i%3], facecolors='none', edgecolors=colors[i], s=50, linewidths=1.5)
+#     plt.plot(positions, p, color=colors[i])
+
+# control_colors = ['#000000',  # black
+#                   "#eb18ac"]  # magenta/pink
+# plt.scatter(*zip(*ideal_pratios_up), color=control_colors[0])
+# plt.plot(*zip(*ideal_pratios_up), color=control_colors[0], label='Ideal Subsonic Recovery')
+# plt.scatter(*zip(*ideal_pratios_down), color=control_colors[1])
+# plt.plot(*zip(*ideal_pratios_down), color=control_colors[1], label='Ideal Supersonic Flow')
+# plt.legend()
+# plt.xlabel('Tapping Positions (mm)')
+# plt.ylabel('Pressure Ratios (P/P0)')
+# plt.title("Graph of Pressure Ratio vs Tapping Position")
+# plt.savefig(fname='graph', bbox_inches='tight', dpi=300)
+# plt.show()
+
+
+# #GRAPH 2
+
+
+# plt.plot(back_pressure_ratios, shock_location, color='blue')
+# plt.scatter(back_pressure_ratios, shock_location, color = 'blue')
+# plt.xlabel("Back Pressure Ratio (Pb/P0)")
+# plt.ylabel("Average Shock Location (mm)")
+# plt.title("Shock Location vs Back Pressure Ratio")
+# plt.savefig(fname='graph2', dpi=300, bbox_inches='tight')
+# plt.show()
