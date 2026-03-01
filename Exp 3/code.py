@@ -57,7 +57,7 @@ p_ratio = lambda p : (p + P0) / P0
 
 p_ratios = [[p_ratio(p) for p in line] for line in pressures]
 
-shock_location = [(positions[1] + positions[0])/2] * (len(back_pressures) -1) + [(positions[2] + positions[1])/2]
+shock_location = [(positions[1] + positions[0])/2] * (len(back_pressures))
 back_pressure_ratios = [p_ratio(p) for p in back_pressures]
 
 
@@ -94,32 +94,34 @@ back_pressure_ratios = [p_ratio(p) for p in back_pressures]
 
 #GRAPH 1
 
-# markers = ['s', 'o', '^']
-# colors = ['#1f77b4',  # blue
-#           '#d62728',  # red
-#           '#2ca02c',  # green
-#           '#ff7f0e',  # orange
-#           '#9467bd',  # purple
-#           '#17becf']  # cyan
+markers = ['s', '*', 'o', '^', 's']
+colors = ['#1f77b4',  # blue
+          '#d62728',  # red
+          '#2ca02c',  # green
+          '#ff7f0e',  # orange
+          '#9467bd',  # purple
+          '#17becf']  # cyan
+fcs = ['none', 'none', 'none', 'none', 'none', 'none']
+ss = [100, 100, 100, 100, 100, 100]
 
-# plt.figure(figsize=(9,6))
-# plt.grid()
-# for i, p in enumerate(p_ratios):
-#     plt.scatter(positions, p, label=f'Data Set {i+1}', marker=markers[i%3], facecolors='none', edgecolors=colors[i], s=50, linewidths=1.5)
-#     plt.plot(positions, p, color=colors[i])
+plt.figure(figsize=(9,6))
+plt.grid()
+for i, p in enumerate(p_ratios):
+    plt.scatter(positions, p, label=f'Data Set {i+1}', marker=markers[i%len(markers)], facecolors=fcs[i], s = ss[i], edgecolors=colors[i], linewidths=1.5)
+    # plt.plot(positions, p, color=colors[i])
 
-# control_colors = ['#000000',  # black
-#                   "#eb18ac"]  # magenta/pink
-# plt.scatter(*zip(*ideal_pratios_up), color=control_colors[0])
-# plt.plot(*zip(*ideal_pratios_up), color=control_colors[0], label='Ideal Subsonic Recovery')
-# plt.scatter(*zip(*ideal_pratios_down), color=control_colors[1])
-# plt.plot(*zip(*ideal_pratios_down), color=control_colors[1], label='Ideal Supersonic Flow')
-# plt.legend()
-# plt.xlabel('Tapping Positions (mm)')
-# plt.ylabel('Pressure Ratios (P/P0)')
-# plt.title("Graph of Pressure Ratio vs Tapping Position")
-# plt.savefig(fname='graph', bbox_inches='tight', dpi=300)
-# plt.show()
+control_colors = ['#000000',  # black
+                  "#eb18ac"]  # magenta/pink
+plt.scatter(*zip(*ideal_pratios_up), color=control_colors[0])
+plt.plot(*zip(*ideal_pratios_up), color=control_colors[0], label='Ideal Subsonic Recovery')
+plt.scatter(*zip(*ideal_pratios_down), color=control_colors[1])
+plt.plot(*zip(*ideal_pratios_down), color=control_colors[1], label='Ideal Supersonic Flow')
+plt.legend()
+plt.xlabel('Tapping Positions (mm)')
+plt.ylabel('Pressure Ratios (P/P0)')
+plt.title("Graph of Pressure Ratio vs Tapping Position")
+plt.savefig(fname='graph', bbox_inches='tight', dpi=300)
+plt.show()
 
 
 # #GRAPH 2
