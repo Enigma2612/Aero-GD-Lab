@@ -32,10 +32,6 @@ def get_pressures(file,i):
     col_pos = df.columns.get_loc(col_index)
     return (np.array(df.iloc[i, col_pos : col_pos+25].to_list()) + P0)
 
-def get_data(file):
-    df = pd.read_excel(f"data/{file}")
-    row_index = 0
-
 P0 = 1.01325
 
 lis = os.listdir('data/')
@@ -52,60 +48,85 @@ markers = ['s', '*', 'o', '^', 's']
 
 #GRAPH 1
 
+average_pressures = []
+
 plt.figure(figsize=(12,8))
-for x,file_name in enumerate(lis[:-1]):
+for x,file_name in enumerate(lis):
     fname = file_name.rstrip('bar.xlsx')
-    for i in range(5,9):
-        pressures = get_pressures(file_name,i)
-        plt.scatter(pos, pressures, color=colors[x])
-        plt.plot(pos, pressures, color=colors[x], linewidth=1.6)
-    plt.scatter(pos[-1], pressures[-1], color=colors[x], label=f"P0j = {fname} bar")
+    pressures = None
+    if file_name !='8bar.xlsx':
+        r = 9
+    else:
+        r = 6
+
+    for i in range(5,r):
+        p = get_pressures(file_name,i)
+        if type(pressures) == type(None):
+            pressures = p.copy()
+        else:
+            pressures += p
+    pressures /= (r-5)
+    average_pressures.append(pressures)
+    plt.scatter(pos, pressures, color=colors[x], label=f"P0j = {fname} bar")
+    plt.plot(pos, pressures, color=colors[x], linewidth=1.6)
 plt.legend()
-plt.title("Pressure Distribution for different Total Jet Pressures")
+plt.title("Average Pressure Distribution for different Total Jet Pressures")
 plt.xlabel("Tapping Position (mm)")
 plt.ylabel("Absolute Pressure (bar)")
 plt.savefig(fname="graph1", dpi=600, bbox_inches='tight')
 plt.show()
 
+average_pressures = np.array(average_pressures)
+average_pressures = np.transpose(average_pressures)
+#TABLE 1
+for i,p in enumerate(average_pressures):
+    s = fr"{i+1}"
+    for x in p:
+        s += fr" & {x:.4f}"
+    s += fr" \\"
+
+    print(s)
+
+    
 
 # #GRAPH 2
 
-def sensor_data(sensor_num, offset=0):
-    df = pd.read_excel(f"data/8bar.xlsx")
-    row = df.iloc[1]
-    col = row[row==str(sensor_num)]
-    col_num = df.columns.get_loc(col.index[0])
-    return np.array(df.iloc[4:, col_num-offset]) + P0
+# def sensor_data(sensor_num, offset=0):
+#     df = pd.read_excel(f"data/8bar.xlsx")
+#     row = df.iloc[1]
+#     col = row[row==str(sensor_num)]
+#     col_num = df.columns.get_loc(col.index[0])
+#     return np.array(df.iloc[4:, col_num-offset]) + P0
 
-df = pd.read_excel(f"data/8bar.xlsx")
-time_data = np.array(df.iloc[4:, 0])
+# df = pd.read_excel(f"data/8bar.xlsx")
+# time_data = np.array(df.iloc[4:, 0])
 
-P18 = sensor_data(18)
-P21 = sensor_data(21)
-P0J = sensor_data(1, offset=2) - P0
+# P18 = sensor_data(18)
+# P21 = sensor_data(21)
+# P0J = sensor_data(1, offset=2) - P0
 
-fig, ax1 = plt.subplots()
-fig.set_size_inches((15,8))
+# fig, ax1 = plt.subplots()
+# fig.set_size_inches((15,8))
 
-l1, = ax1.plot(time_data[1:], P18[1:], color=colors[2])
-s1 = ax1.scatter(time_data[1:], P18[1:], s=15, color=colors[2], label="Tapping Point 18 Data")
+# l1, = ax1.plot(time_data[1:], P18[1:], color=colors[2])
+# s1 = ax1.scatter(time_data[1:], P18[1:], s=15, color=colors[2], label="Tapping Point 18 Data")
 
-l2, = ax1.plot(time_data[1:], P21[1:], color=colors[3])
-s2 = ax1.scatter(time_data[1:], P21[1:], color=colors[3], s=15, label="Tapping Point 21 Data")
+# l2, = ax1.plot(time_data[1:], P21[1:], color=colors[3])
+# s2 = ax1.scatter(time_data[1:], P21[1:], color=colors[3], s=15, label="Tapping Point 21 Data")
 
-ax2 = ax1.twinx()
+# ax2 = ax1.twinx()
 
-l3, = ax2.plot(time_data[1:], P0J[1:], color=colors[4])
-s3 = ax2.scatter(time_data[1:], P0J[1:], label="Total Jet Pressure P0j", color=colors[4], s=15)
+# l3, = ax2.plot(time_data[1:], P0J[1:], color=colors[4])
+# s3 = ax2.scatter(time_data[1:], P0J[1:], label="Total Jet Pressure P0j", color=colors[4], s=15)
 
-# Combine legends
-handles = [s1, s2, s3]
-labels = [h.get_label() for h in handles]
+# # Combine legends
+# handles = [s1, s2, s3]
+# labels = [h.get_label() for h in handles]
 
-ax1.legend(handles, labels, loc="center right", ncol=1)
-ax1.set_ylabel("Absolute Pressure of Tapping Points (bar)")
-ax2.set_ylabel("Absolute Pressure (P0j) (bar)")
-ax1.set_xlabel("Time (s)")
-ax1.set_title("Pressure variation of Sensor 18 and 21 and Total Jet Pressure")
-plt.savefig(fname="graph2", dpi=600, bbox_inches='tight')
-plt.show()
+# ax1.legend(handles, labels, loc="center right", ncol=1)
+# ax1.set_ylabel("Absolute Pressure of Tapping Points (bar)")
+# ax2.set_ylabel("Absolute Pressure (P0j) (bar)")
+# ax1.set_xlabel("Time (s)")
+# ax1.set_title("Pressure variation of Sensor 18 and 21 and Total Jet Pressure")
+# plt.savefig(fname="graph2", dpi=600, bbox_inches='tight')
+# plt.show()
