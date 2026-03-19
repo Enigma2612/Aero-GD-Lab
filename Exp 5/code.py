@@ -75,3 +75,28 @@ print(f"{Real_Cds=}")
 print()
 print(f"{Theoretical_Cls=}")
 print(f"{Real_Cls=}")
+
+alphas = [0,2,4]
+colors = ['#1f77b4',  # blue
+          '#d62728',  # red
+          '#2ca02c',  # green
+          '#ff7f0e',  # orange
+          '#9467bd',  # purple
+          "#1693a1"]  # cyan
+
+plt.plot(alphas, Theoretical_Cds.values(), label="Theory CD Values", marker='o', color=colors[2])
+plt.plot(alphas, Real_Cds.values(), label="Experimental CD Values", marker='o', color=colors[3])
+plt.legend()
+plt.xlabel("Angle of attack (in degrees)")
+plt.ylabel("Coefficient of Drag")
+plt.title("Coefficient of Drag vs Angle of Attack for Diamond Wedge")
+plt.savefig(fname='cd', dpi=300, bbox_inches='tight')
+plt.show()
+plt.plot(alphas, Theoretical_Cls.values(), label="Theory CL Values", marker='o', color=colors[1])
+plt.plot(alphas, Real_Cls.values(), label="Experimental CL Values", marker='o', color=colors[5])
+plt.legend()
+plt.xlabel("Angle of attack (in degrees)")
+plt.ylabel("Coefficient of Lift")
+plt.title("Coefficient of Lift vs Angle of Attack for Diamond Wedge")
+plt.savefig(fname='cl', dpi=300, bbox_inches='tight')
+plt.show()
