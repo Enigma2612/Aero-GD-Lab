@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 import math
 
 #CONSTANTS
+M = 1.8
+
 
 
 #FUNCTIONS
