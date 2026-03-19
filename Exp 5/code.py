@@ -14,6 +14,8 @@ P0 = 1.01325
 P = P0 / (1 + 0.2*M**2)**(7/2)
 q = 0.5 * rho * U**2
 
+print(P, T, rho)
+
 #FUNCTIONS
 
 def cos(theta): return math.cos(math.radians(theta))
@@ -26,6 +28,7 @@ p4_mat = lambda alpha: np.array([-sin(5-alpha), cos(5-alpha)])
 
 def get_forces_and_coeffs(p1,p2,p3,p4,alpha):
     f = p1_mat(alpha)*p1 + p2_mat(alpha)*p2 + p3_mat(alpha)*p3 + p4_mat(alpha)*p4
+    drag, lift = f
 
     cd = f[0] / (q * 2 * cos(5))
     cl = f[1] / (q * 2 * cos(5))
@@ -41,6 +44,7 @@ def get_data(alpha):
     p3 = df2.iloc[4,4+26]
     p4 = df2.iloc[4,4+27]
 
+    # return [p1,p2,p3,p4]
     return np.round((np.array([p1,p2,p3,p4]) + P0)*1e5,5)
 
 Real_Cds = {}
@@ -50,6 +54,7 @@ for alpha in [0,2,4]:
     f,cd,cl = get_forces_and_coeffs(*get_data(alpha), alpha)
     Real_Cds[alpha] = round(float(cd),4)
     Real_Cls[alpha] = round(float(cl),4)
+
 
 # print("CD")
 # print(Real_Cds)
@@ -70,6 +75,21 @@ for alpha in Theoretical_Ps:
     Theoretical_Cds[alpha] = round(float(cd),4)
 
 
+#TABLE 1 - PRESSURE READINGS
+# for i,alpha in enumerate([0,2,4]):
+#     ps = get_data(alpha)
+#     s = fr"{i+1} & {alpha} & {ps[0]} & {ps[1]} & {ps[2]} & {ps[3]} \\"
+#     print(s)
+# print(fr"\hline")
+
+#TABLE 2 - RESULTS
+# for i,alpha in enumerate([0,2,4]):
+#     s = fr"{i+1} & {alpha} & {Theoretical_Cds[alpha]} & {Real_Cds[alpha]} & {Theoretical_Cls[alpha]} & {Real_Cls[alpha]} \\"
+#     print(s)
+# print(rf"\hline")
+
+#GRAPHS
+
 print(f"{Theoretical_Cds=}")
 print(f"{Real_Cds=}")
 print()
@@ -84,6 +104,7 @@ colors = ['#1f77b4',  # blue
           '#9467bd',  # purple
           "#1693a1"]  # cyan
 
+plt.figure(figsize=(10,6))
 plt.plot(alphas, Theoretical_Cds.values(), label="Theory CD Values", marker='o', color=colors[2])
 plt.plot(alphas, Real_Cds.values(), label="Experimental CD Values", marker='o', color=colors[3])
 plt.legend()
@@ -92,6 +113,7 @@ plt.ylabel("Coefficient of Drag")
 plt.title("Coefficient of Drag vs Angle of Attack for Diamond Wedge")
 plt.savefig(fname='cd', dpi=300, bbox_inches='tight')
 plt.show()
+plt.figure(figsize=(10,6))
 plt.plot(alphas, Theoretical_Cls.values(), label="Theory CL Values", marker='o', color=colors[1])
 plt.plot(alphas, Real_Cls.values(), label="Experimental CL Values", marker='o', color=colors[5])
 plt.legend()
