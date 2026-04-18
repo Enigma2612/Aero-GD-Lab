@@ -54,7 +54,7 @@ plt.plot(
 plt.xticks(np.arange(0, 61, 5))  # 0 to 75 inclusive, step 5
 plt.xlabel("X Position (mm)")
 plt.ylabel("P0 (bar)")
-plt.title("Stagnation Pressure Variation for Overexpanded Jet")
+plt.title("Stagnation Pressure Variation for Over-expanded Jet")
 plt.legend()
 plt.tight_layout()
 plt.savefig(path + 'overexp', dpi=300, bbox_inches='tight')
@@ -84,7 +84,7 @@ plt.plot(
 plt.xticks(np.arange(0, 61, 5))  # 0 to 75 inclusive, step 5
 plt.xlabel("X Position (mm)")
 plt.ylabel("P0 (bar)")
-plt.title("Stagnation Pressure Variation for Underexpanded Jet")
+plt.title("Stagnation Pressure Variation for Under-expanded Jet")
 plt.legend()
 plt.tight_layout()
 plt.savefig(path + 'underexp', dpi=300, bbox_inches='tight')
