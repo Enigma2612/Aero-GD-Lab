@@ -8,6 +8,9 @@ import matplotlib.pyplot as plt
 
 P0_atm = 1.01325
 
+path = os.path.dirname(os.path.abspath(__file__)) + "/Graphs/"
+print(path)
+
 def load_data(file):
     with open(file, 'r') as f:
         reader = csv.reader(f)
@@ -33,7 +36,7 @@ setup()
 
 #overexp
 
-plt.figure(figsize=(8, 5))  # gives space for labels/title
+plt.figure(figsize=(10, 4))  # gives space for labels/title
 
 x, P0 = load_data("Data/over_data.csv")
 
@@ -48,13 +51,13 @@ plt.plot(
     markersize=8,
     label='Data points'
 )
-
+plt.xticks(np.arange(0, 61, 5))  # 0 to 75 inclusive, step 5
 plt.xlabel("X Position (mm)")
 plt.ylabel("P0 (bar)")
 plt.title("Stagnation Pressure Variation for Overexpanded Jet")
 plt.legend()
 plt.tight_layout()
-
+plt.savefig(path + 'overexp', dpi=300, bbox_inches='tight')
 plt.show()
 
 #Graph 2
@@ -78,10 +81,13 @@ plt.plot(
     label='Data points'
 )
 
+plt.xticks(np.arange(0, 61, 5))  # 0 to 75 inclusive, step 5
 plt.xlabel("X Position (mm)")
 plt.ylabel("P0 (bar)")
 plt.title("Stagnation Pressure Variation for Underexpanded Jet")
 plt.legend()
 plt.tight_layout()
+plt.savefig(path + 'underexp', dpi=300, bbox_inches='tight')
+
 
 plt.show()
