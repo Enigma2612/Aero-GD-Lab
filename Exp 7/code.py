@@ -65,7 +65,7 @@ plt.show()
 
 #overexp
 
-plt.figure(figsize=(8, 5))  # gives space for labels/title
+plt.figure(figsize=(10, 4))  # gives space for labels/title
 
 x, P0 = load_data("Data/under_data.csv")
 
