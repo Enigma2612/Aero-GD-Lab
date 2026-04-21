@@ -1,22 +1,22 @@
 import csv
-psi_to_bar = lambda p : p * 0.0689476
-abs_p = lambda p : p + P_atm
 
-P01 = abs_p(psi_to_bar(-0.5))
-P02 = abs_p(psi_to_bar(-2.38))
 P_atm = 1.01325
+psi_to_bar = lambda p : p * 0.0689476 if not isinstance(p, list) else [i * 0.0689476 for i in p]
+abs_p = lambda p : p + P_atm if not isinstance(p, list) else [i + P_atm for i in p]
+conv = lambda p: abs_p(psi_to_bar(p))
 
-P_2_M2 = []
-P_neg_2_M2 = []
+P01 = conv(-0.5)
+P02 = conv(-2.38)
 
-m1_free = []
+P1_free = -0.8
+P2_free = -3.9
 
 
 
-with open('Data/5psi/-2_M1.csv') as f:
-    reader = csv.reader(f)
-    next(reader)
-    for row in reader:
-        m1_free.append(row[1])
-        needed = row[2:4] + row[5:6] + row[6:]
+#just copying the pressures cuz I don't like file handling lol
+
+P_neg_2_M1 = conv([-0.7,-0.7,-0.8,-0.7,-0.7,-0.7,-0.6,-0.7])
+P_2_M1 = conv([-1,-1,-0.9,-0.7,-0.6,-0.7,-0.6,-0.6])
+P_neg_2_M2 = conv([-3.6,-3.7,-4,-3.6,-3.4,-3.3,-3.2,-3])
+P_2_M2 = conv([-5.1,-5,-4.7,-3.9,-3.6,-3.4,-3.2,-3])
 
