@@ -24,22 +24,39 @@ print(m1, m2)
 
 P_2_M2 = conv([-1,-1,-0.9,-0.7,-0.6,-0.7,-0.6,-0.6])
 
+
 P_2_M1 = conv([-5.1,-5,-4.7,-3.9,-3.6,-3.4,-3.2,-3])
 P_2_n_M1 = conv([-3.6,-3.7,-4,-3.6,-3.4,-3.3,-3.2,-3])
 P_4_M1 = conv([-5.6,-5.4,-4.9,-4,-3.6,-3.4,-3.2,-3])
 P_4_n_M1 = conv([-3.3,-3.5,-3.9,-3.6,-3.4,-3.3,-3.2,-3])
 P_0_M1 = conv([-4.3,-4.3,-4.3,-3.7,-3.5,-3.3,-3.1,-3])
 
+
+
 plot_lis_1 = [P_0_M1, P_2_M1, P_2_n_M1, P_4_M1, P_4_n_M1]
-print([len(i) for i in plot_lis_1])
 leg_lis = ['α = 0˚', 'α = 2˚', 'α = -2˚', 'α = 4˚', 'α = -4˚']
 
+tab_lis_1 = list(zip(*cp(plot_lis_1, P1_free_pos, m1)))
+
+r = lambda x,n: round(x, n) if not isinstance(x, list) else [r(i,n) for i in x]
+
+# print("| x/c | α = 0˚ | α = 2˚ | α = -2˚ | α = 4˚ | α = -4˚|")
+# for i,lis in enumerate(tab_lis_1):
+#     a = r' & '.join([str(x) for x in [xpos[i]] + r(list(lis),3)]) + r' \\'
+#     print(a)
 
 cp_pos_1 = np.array(cp(P_2_M1, P1_free_pos, m1))
 cp_pos_2 = np.array(cp(P_2_M2, P2_free_pos, m2))
 
 
 ratio = ((1-m2**2)/(1-m1**2))**0.5
+
+e = lambda a,b : abs((a-b)/a * 100)
+
+for i in range(len(xpos)):
+    cpratio = (cp_pos_1[i]/cp_pos_2[i])
+    s = fr'{xpos[i]} & {cpratio:.3f} & {ratio:.3f} & {e(ratio, cpratio):.3f} \\'
+    print(s)
 
 
 plt.style.use('seaborn-v0_8-whitegrid')
