@@ -25,6 +25,8 @@ print(P0)
 full_data = conv(full_data)
 legend_lis = [20, 25, 30, 35, 40]
 
+print(*M(full_data), sep='\n')
+
 
 plt.style.use('seaborn-v0_8-whitegrid')  # clean modern style
 
@@ -81,7 +83,7 @@ y2 = pg(Cp_inc, x2)
 plt.figure(figsize=(10,6))
 plt.xlabel("Mach Number")
 plt.plot(x1,y1, label='Pressure Ratio P/P0')
-plt.plot(x2,np.abs(y2), label='Compressible CP')
+plt.plot(x2,np.abs(y2), label='Compressible CP (absolute value)')
 plt.axvline(x=0.783761, ymax=(0.6), linestyle='--', color='green')
 plt.scatter([0.783761], [0.6666], color='green', marker='o', label=f'Critical Mach Number\nMcr = 0.783761')
 plt.legend(frameon=True)
