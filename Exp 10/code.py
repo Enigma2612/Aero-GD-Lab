@@ -9,11 +9,14 @@ psi40 = [-6.9,-7.9,-8.2,-9.8,-7.6,-6.3,-6.0,-5.7,-5.4]
 xpos = [0.07613, 0.09578, 0.19303, 0.37623, 0.49607, 0.59479, 0.69400, 0.79224]
 full_data = [psi20, psi25, psi30, psi35, psi40]
 
+gamma = 1.4
+
 psi_to_bar = lambda p : p * 0.0689476 if not isinstance(p, list) else [psi_to_bar(i) for i in p]
 abs_p = lambda p : p + P_atm if not isinstance(p, list) else [abs_p(i) for i in p]
 conv = lambda p: abs_p(psi_to_bar(p))
 cp = lambda p, p_inf, m : 2/(1.4 * m**2) * (p/p_inf - 1) if not isinstance(p, list) else [cp(i,p_inf,m) for i in p]
 P_atm = psi_to_bar(14.6)
+M = lambda P: ((2 / (gamma - 1)) * (((P0 / P) ** ((gamma - 1) / gamma)) - 1)) ** 0.5 if not isinstance(P, list) else [M(i) for i in P]
 
 P0 = P_atm
 print(P0)
@@ -33,14 +36,35 @@ plt.rcParams.update({
     'legend.fontsize': 14     # legend text
 })
 
+#GRAPH 1 : P VS X/C
 
 plt.figure(figsize=(10,6))
 for i,lis in enumerate(full_data):
-    plt.plot(xpos, lis[1:], marker='o', label=f"{legend_lis[i]} psi (ejection)")
+    p_free = lis[0]
+    mach = M(p_free)
+    plt.plot(xpos, lis[1:], marker='o', label=f"{legend_lis[i]} psi | M∞ = {mach:.2f}")
+
 
 plt.legend(frameon=True)
 plt.xlabel("x/c Position on Airfoil")
 plt.ylabel("Absolute Pressure (bar)")
 plt.title("Pressure Variation Along NACA0012 Airfoil")
+plt.savefig(fname='pressure_variation', dpi=600, bbox_inches='tight')
+plt.show()
+
+#GRAPH 2 : MACH VS X/C
+
+plt.figure(figsize=(10,6))
+for i,lis in enumerate(full_data):
+    p_free = lis[0]
+    mach = M(p_free)
+    plt.plot(xpos, M(lis[1:]), marker='o', label=f"{legend_lis[i]} psi | M∞ = {mach:.2f}")
+
+plt.axhline(y=1, linestyle='--', color='magenta')
+plt.legend(frameon=True)
+plt.xlabel("x/c Position on Airfoil")
+plt.ylabel("Local Mach Number")
+plt.title("Local Mach Number Variation Along NACA0012 Airfoil")
+plt.savefig(fname='mach_variation', dpi=600, bbox_inches='tight')
 plt.show()
 
